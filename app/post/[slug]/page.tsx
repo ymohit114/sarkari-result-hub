@@ -26,6 +26,14 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
+export async function generateStaticParams() {
+  const posts = await prisma.jobPost.findMany({
+    where: { status: 'PUBLISHED' },
+    select: { slug: true },
+  });
+  return posts.map((post) => ({ slug: post.slug }));
+}
+
 export async function generateMetadata(
   { params }: Props,
   parent: ResolvingMetadata
