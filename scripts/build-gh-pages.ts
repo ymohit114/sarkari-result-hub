@@ -9,6 +9,9 @@ const tempApiDir = path.join(process.cwd(), '.temp_api');
 const adminDir = path.join(appDir, 'admin');
 const tempAdminDir = path.join(process.cwd(), '.temp_admin');
 
+const outDir = path.join(process.cwd(), 'out');
+const docsDir = path.join(process.cwd(), 'docs');
+
 try {
   if (fs.existsSync(apiDir)) {
     fs.renameSync(apiDir, tempApiDir);
@@ -25,12 +28,24 @@ try {
     console.log('Cleaned .next cache.');
   }
 
-  console.log('Running static export build...');
+  console.log('Running static export build for GitHub Pages...');
   execSync('npm run build', {
     stdio: 'inherit',
     env: { ...process.env, GITHUB_PAGES: 'true' },
   });
   console.log('✅ Static export build succeeded!');
+
+  // Ensure .nojekyll in out/
+  fs.writeFileSync(path.join(outDir, '.nojekyll'), '');
+
+  // Copy out/ to docs/
+  console.log('Publishing build to docs/ directory for GitHub Pages...');
+  if (fs.existsSync(docsDir)) {
+    fs.rmSync(docsDir, { recursive: true, force: true });
+  }
+  fs.cpSync(outDir, docsDir, { recursive: true });
+  fs.writeFileSync(path.join(docsDir, '.nojekyll'), '');
+  console.log('✅ Successfully copied to docs/ with .nojekyll');
 } catch (error) {
   console.error('Build error:', error);
 } finally {
