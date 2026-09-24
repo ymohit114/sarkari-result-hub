@@ -1,0 +1,78 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model JobPost {
+  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
+  title               String
+  slug                String   @unique
+  category            String   @default("latest-jobs")
+  organization        String?
+  postDate            DateTime @default(now())
+  shortDescription    String?
+  totalVacancies      String?
+  qualification       String?
+  
+  // Important Dates
+  applicationBegin    String?
+  lastDateApply       String?
+  lastDateFee         String?
+  examDate            String?
+  admitCardDate       String?
+  
+  // Application Fee
+  feeGeneral          String?
+  feeScStPh           String?
+  feeFemale           String?
+  feePaymentMode      String?
+  
+  // Age Limit
+  ageMin              String?
+  ageMax              String?
+  ageDetails          String?
+  
+  // Vacancy & Links
+  vacancyDetailsJson  String?
+  applyOnlineUrl      String?
+  notificationPdfUrl  String?
+  officialWebsiteUrl  String?
+  content             String?
+  
+  // Scraper & Sync
+  sourceUrl           String?  @unique
+  status              String   @default("PUBLISHED")
+  isTelegramSent      Boolean  @default(false)
+  telegramMessageId   String?
+  viewCount           Int      @default(0)
+  
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+model SiteSetting {
+  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
+  siteName            String   @default("Sarkari Result Hub")
+  siteDescription     String   @default("Latest Government Jobs, Sarkari Naukri, Results, Admit Card, Answer Key, Syllabus & Admissions")
+  siteUrl             String   @default("http://localhost:3000")
+  telegramBotToken    String   @default("")
+  telegramChannelId   String   @default("")
+  telegramAutoPublish Boolean  @default(true)
+  scraperAutoPublish  Boolean  @default(true)
+  adminPassword       String   @default("admin123")
+  updatedAt           DateTime @updatedAt
+}
+
+model ScraperLog {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  source       String
+  itemsFound   Int      @default(0)
+  itemsCreated Int      @default(0)
+  status       String   @default("SUCCESS")
+  logMessage   String?
+  createdAt    DateTime @default(now())
+}

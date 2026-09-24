@@ -7,6 +7,10 @@
     "build": "next build",
     "start": "next start",
     "worker": "tsx scripts/worker.ts",
+    "db:export": "tsx scripts/export-data.ts",
+    "db:mongo": "tsx scripts/switch-db.ts mongo",
+    "db:sqlite": "tsx scripts/switch-db.ts sqlite",
+    "db:seed-mongo": "tsx scripts/migrate-to-mongo.ts",
     "postinstall": "prisma generate",
     "lint": "eslint"
   },
