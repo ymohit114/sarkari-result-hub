@@ -1,6 +1,8 @@
 import { MetadataRoute } from 'next';
 import { prisma } from '@/lib/prisma';
 
+export const dynamic = 'force-static';
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const settings = await prisma.siteSetting.findUnique({
     where: { id: 'default' },
