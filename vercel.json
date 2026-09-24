@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/scrape?key=sarkari_secret_cron_key",
+      "schedule": "0 */4 * * *"
+    }
+  ]
+}
